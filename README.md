@@ -89,7 +89,7 @@ function encryptLSH(lshHash, secretKey, secretIV) {
     return { encryptedData: encrypted, iv: iv.toString('hex') };
 }
 
-//Encrypt LSH hash, pass your LSH hashed password (passwordLSH), secret key and iv.
+//Encrypt LSH hash, pass your LSH hashed password (passwordLSH), secret key and iv as arguments to the encryption function.
 const encryptedPasswordLSH = encryptLSH(passwordLSH, key, iv);
 ```
 
@@ -141,12 +141,16 @@ if(isSame) return { message:"You can't use your old password as the new one", st
 
 //below code will only run if passwords don't match
 
-//decrypt encyptedPasswordLSH
+//Decryption function
+function decryptLSH(encryptedPassword, secretKey, secretIV) {
+    const decipher = crypto.createDecipheriv('aes-256-cbc', secretKey, Buffer.from(secretIV, 'hex'));
+    let decrypted = decipher.update(encryptedPassword, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
+}
 
+//Decrypt LSH hash for similarity comparison. Pass the encryptedPasswordLSH, key and IV as arguments to the decryption function.
+const decryptedLSHPassword = decryptLSH(encryptedPasswordLSH, key, iv);
 
-
-
-
-
-
+//decryptedLSHPassword Should match original LSH hash
 ```
