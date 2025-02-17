@@ -24,6 +24,8 @@ simHash (for LSH-based hashing)
 
 crypto (for AES-256 encryption and decryption)
 
+fast-levenshtein (for similarity comparison)
+
 dotenv (for reading env file)
 
 ## 1. Create env file and save secret encryption key and Initialization vector key.
@@ -176,10 +178,44 @@ To achieve this we have to compare the two hashes with a distance(similarities) 
 
 We will work with Levenshtein distance algo.
 
+The Levenshtein distance measures the number of single-character edits (insertions, deletions, or substitutions) required to transform one string into another.
+
 ```javascript
 JavaScript
+const levenshtein = require('fast-levenshtein');
+const dotenv = require('dotenv');
 
+//import secret keys from .env file
+const key = process.env.AES_KEY;
+const iv = process.env.IV_KEY;
 
+//set a threshold number. This is the number of single character edits we want to check for.
+const threshold = 3;
+
+//similarities check function
+function areSimilar(newPasswordLSH, oldPasswordLSH, threshold) {
+    const distance = levenshtein.get(newPasswordLSH, oldPasswordLSH);
+    return distance <= threshold; //If distance is within the threshold, it is too similar
+}
+
+//call function and pass newPasswordLSH and decryptedLSHPassword as arguments.
+
+const similar = areSimilar(newPasswordLSH, decryptedLSHPassword);
+
+//if similar=true then passwords have similarities within the set threshold, in our case less than or equal to 3, and if similar=false then passwords have similarities that are above the set threshold or they have no similarities
+
+//You can handle the outcome as you wish. Look at the example below.
+
+if(similar){
+return { message: 'Your new password can't be similar to your current password', statusCode: 401 }
+} else {
+//we will first encrypt the new password. You remember our encryption function right?
+const encryptedNewPasswordLSH = encryptLSH(newPasswordLSH, key, iv);
+
+//update password in DB
+await updatePasswordInDB(encryptedNewPasswordLSH);
+
+return { message: 'Password updated successfully', statusCode: 201 }
 ```
-
+Finally, this should be it, we have successfully saved our hashed password securely and we are able to compare for similarities, although we are saving two passwords in the DB, we shouldn't worry because one is bcrypt hashed and the second is LSH hashed and AES-256 encrypted. 🙌🏽
 
