@@ -114,13 +114,14 @@ savePasswordsToDB(passwordPri, encryptedPasswordLSH);
 ## 5. update new password
 ---
 
-simulating when a user tries updating password.
+When a user tries updating password.
 
 ```javascript
 JavaScript
 
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
+const simHash = require('simHash');
 const dotenv = require('dotenv');
 
 //import secret keys from .env file
@@ -153,4 +154,16 @@ function decryptLSH(encryptedPassword, secretKey, secretIV) {
 const decryptedLSHPassword = decryptLSH(encryptedPasswordLSH, key, iv);
 
 //decryptedLSHPassword Should match original LSH hash
+
+//To compare new password with our decryptedLSHPassword which is now a LSH Hash, we have to have newPassword
+const newPasswordLSH = simHash(newPassword);
 ```
+#### code explanation
+* Import packages
+* get env secret key and iv
+* collect user's new password
+* get user's two hashed passwords from db
+* compare user's new password with current password (use the bcrypt hashed password) check with bcrypt.compare()
+* Don't allow password change if new password matches current password (passwordPri)(exact match)
+* if password don't match, decrypt the encrypted password gotten from db (encryptedPasswordLSH)
+* 
