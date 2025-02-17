@@ -18,15 +18,15 @@ We will be working with LSH (Locality sensitive hashing) which allows similar pl
 
 ## Perequisites
 ### packages
-Bcrypt (for Deterministic and avalanche effect hash algo)
+* Bcrypt (for Deterministic and avalanche effect hash algo)
 
-simHash (for LSH-based hashing)
+* simHash (for LSH-based hashing)
 
-crypto (for AES-256 encryption and decryption)
+* crypto (for AES-256 encryption and decryption)
 
-fast-levenshtein (for similarity comparison)
+* fast-levenshtein (for similarity comparison)
 
-dotenv (for reading env file)
+* dotenv (for reading env file)
 
 ## 1. Create env file and save secret encryption key and Initialization vector key.
 ---
@@ -217,5 +217,7 @@ await updatePasswordInDB(encryptedNewPasswordLSH);
 
 return { message: 'Password updated successfully', statusCode: 201 }
 ```
+---
+
 Finally, this should be it, we have successfully saved our hashed password securely and we are able to compare for similarities, although we are saving two passwords in the DB, we shouldn't worry because one is bcrypt hashed and the second is LSH hashed and AES-256 encrypted. 🙌🏽
 
