@@ -131,7 +131,7 @@ const iv = process.env.IV_KEY;
 //user's new password 
 const newPassword = newpassword123;
 
-//fetch your two password hashes from DB
+//fetch your two passwords, bcrypt hashed and, LSH hashed and AES encrypted from DB
 const { passwordPri, encryptedPasswordLSH } = await fetchPasswordsFromDB();
 
 //Check if new password is same as passwordPri using bcrypt
@@ -155,7 +155,7 @@ const decryptedLSHPassword = decryptLSH(encryptedPasswordLSH, key, iv);
 
 //decryptedLSHPassword Should match original LSH hash
 
-//To compare new password with our decryptedLSHPassword which is now a LSH Hash, we have to have newPassword
+//To compare new password with our decryptedLSHPassword which is now a LSH Hash, we have to LSH hash newPassword
 const newPasswordLSH = simHash(newPassword);
 ```
 #### code explanation
@@ -164,6 +164,22 @@ const newPasswordLSH = simHash(newPassword);
 * collect user's new password
 * get user's two hashed passwords from db
 * compare user's new password with current password (use the bcrypt hashed password) check with bcrypt.compare()
-* Don't allow password change if new password matches current password (passwordPri)(exact match)
+* Don't allow password change if new password matches current password (passwordPri)(exact match). Return a not allowed message.
 * if password don't match, decrypt the encrypted password gotten from db (encryptedPasswordLSH)
-* 
+* LSH hash new password (newPassword) to be able to compare it with decryptedLSHPassword
+
+---
+
+## 6. comparing decrypted hashed password(decryptedLSHPassword) with new password LSH hash(newPasswordLSH) for similarities.
+
+To achieve this we have to compare the two hashes with a distance(similarities) calculating algorithm.
+
+We will work with Levenshtein distance algo.
+
+```javascript
+JavaScript
+
+
+```
+
+
