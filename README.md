@@ -3,6 +3,9 @@ Hash passwords and compare for similarities
 
 ---
 
+All what you are about to read would have been unnecessary but users do forget their passwords, if not, we can just collect old passwords and compare with new one but like i said users do forget their passwords, and that has brought us here. : 🥵 :
+---
+
 Let me walk you on how to Hash passwords and still be able to compare for similarities.
 
 >[!NOTE]
@@ -65,7 +68,7 @@ let passwordLSH = simHash(password);
 * hash password with bcrypt (passwordPri)
 * hash password with simHash (passwordLSH)
 
-## 3. Encrypt LSH hashed paswword
+## 3. Encrypt LSH hashed password
 
 ```javascript
 JavaScript
@@ -95,11 +98,50 @@ const encryptedPasswordLSH = encryptLSH(passwordLSH, key, iv);
 * Define and create encryption function. You can tweak as you want.
 * Call function and pass arguments.
 
-### 2. update new password
+## 4. save passwords to db
 ---
 
 ```javascript
 JavaScript
 
-const newPassword = newpassword123
+//You should have both your bcrypt hashed password (passwordPri) and your LSH hashed and AES-256 encrypted password (encryptedPasswordLSH)
+
+//save to DB
+savePasswordsToDB(passwordPri, encryptedPasswordLSH);
+```
+
+## 5. update new password
+---
+
+simulating when a user tries updating password.
+
+```javascript
+JavaScript
+
+const crypto = require('crypto');
+const bcrypt = require('bcrypt');
+const dotenv = require('dotenv');
+
+//import secret keys from .env file
+const key = process.env.AES_KEY;
+const iv = process.env.IV_KEY;
+
+//user's new password 
+const newPassword = newpassword123;
+
+//fetch your two password hashes from DB
+const { passwordPri, encryptedPasswordLSH } = await fetchPasswordsFromDB();
+
+//Check if new password is same as passwordPri using bcrypt
+const isSame = bcrypt.compare(newPassword, passwordPri);
+
+//don't allow password change if passwords match
+if(isSame) return { message:"You can't use your old password as the new one", statusCode: 401 }
+
+
+
+
+
+
+
 ```
