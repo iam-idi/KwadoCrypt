@@ -3,7 +3,8 @@ Hash passwords and compare for similarities
 
 ---
 
-All what you are about to read would have been unnecessary but users do forget their passwords, if not, we can just collect old passwords and compare with new one but like i said users do forget their passwords, and that has brought us here. : 🥵 :
+All what you are about to read would have been unnecessary but users do forget their passwords, if not, we can just collect old passwords and compare with new one but like i said users do forget their passwords, and that has brought us here. 🥵
+
 ---
 
 Let me walk you on how to Hash passwords and still be able to compare for similarities.
@@ -137,6 +138,10 @@ const isSame = bcrypt.compare(newPassword, passwordPri);
 
 //don't allow password change if passwords match
 if(isSame) return { message:"You can't use your old password as the new one", statusCode: 401 }
+
+//below code will only run if passwords don't match
+
+//decrypt encyptedPasswordLSH
 
 
 
