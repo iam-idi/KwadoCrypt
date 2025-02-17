@@ -39,7 +39,7 @@ AES_KEY=yourAESsecretKey
 IV_KEY=yourIVsecretKey
 ```
 
-You can generate random strings to use as your secret key, this should not be exposed.
+You can generate random strings to use as your secret key and IV, these should not be exposed.
 
 ## 2. hash password
 ---
